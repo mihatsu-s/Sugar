@@ -1,0 +1,6 @@
+BasedOnStyle: Chromium
+
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+ColumnLimit: 0
+IndentWidth: 4
