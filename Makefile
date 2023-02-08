@@ -11,7 +11,7 @@ TEST_BIN_SUF := .exe
 new/%:
 	mkdir -p $(dir $(SRC_DIR)/$(patsubst new/%,%,$@))
 	touch $(SRC_DIR)/$(patsubst new/%,%,$@)$(SRC_SUF)
-	mkdir -p $(dir $(patsubst new/%,%,$@))
+	mkdir -p $(dir $(TEST_DIR)/$(patsubst new/%,%,$@))
 	touch $(TEST_DIR)/$(patsubst new/%,%,$@)$(TEST_SRC_SUF)
 
 test: $(patsubst %$(TEST_SRC_SUF), %,                   \
