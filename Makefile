@@ -8,6 +8,8 @@ TEST_BIN_SUF := .out
 
 .PHONY: new test clean
 
+.PRECIOUS: $(TEST_DIR)/%$(TEST_BIN_SUF)
+
 new/%:
 	# generate source file
 	mkdir -p $(dir $(SRC_DIR)/$(patsubst new/%,%,$@))
