@@ -48,8 +48,17 @@ TEST_SUITE("for-else statement") {
     }
 }
 
-TEST_SUITE("break_of macro") {
-    TEST_CASE("breaks labeled for statement") {
+TEST_SUITE("break macro") {
+    TEST_CASE("break macro without an argument behaves like a break statement") {
+        int x = 1;
+        while (true) {
+            x *= 2;
+            if (x > 5) break;
+        }
+        CHECK(x == 8);
+    }
+
+    TEST_CASE("break macro with an argument breaks given for statement") {
         BEGIN_TRACE();
     loop_i:
         for (int i = 1; i < 5; ++i) {
@@ -58,22 +67,11 @@ TEST_SUITE("break_of macro") {
                 for (int k = 1; k < 5; ++k) {
                     TRACE(i * 100 + j * 10 + k);
                     if (k >= 3) break;
-                    if (j + k >= 4) break_of(loop_j);
-                    if (i + j + k >= 5) break_of(loop_i);
+                    if (j + k >= 4) break(loop_j);
+                    if (i + j + k >= 5) break(loop_i);
                 }
             }
         }
         CHECK_TRACE(111, 112, 113, 121, 122, 211, 212);
-    }
-}
-
-TEST_SUITE("break macro") {
-    TEST_CASE("behaves like break statement") {
-        int x = 1;
-        while (true) {
-            x *= 2;
-            if (x > 5) break;
-        }
-        CHECK(x == 8);
     }
 }

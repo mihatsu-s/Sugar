@@ -18,8 +18,6 @@ inline BreakState get_and_reset_break_state() noexcept {
 
 }  // namespace sugar::_internal::_for
 
-inline int _sugar_loop_state = -1;  // dummy
-
 #define for(...) \
     SUGAR_FOR_IMPL(SUGAR_CONCAT(_sugar_for_, __COUNTER__), sugar::_internal::_for, __VA_ARGS__)
 #define SUGAR_FOR_IMPL(label_name, ns, ...)                                         \
@@ -34,13 +32,23 @@ inline int _sugar_loop_state = -1;  // dummy
             } else                                                                  \
                 for (__VA_ARGS__)
 
-#define break                         \
-    if (_sugar_loop_state = 2; false) \
-        SUGAR_NOOP;                   \
-    else                              \
-        break
+// dummy variables
+inline int _sugar_loop_state = -1;
+constexpr inline int SUGAR_BREAK_LABEL_RECIEVER = 0;
 
-#define break_of(label)                                                                    \
+#define break SUGAR_BREAK_IMPL(SUGAR_CONCAT(_sugar_break_, __COUNTER__))
+#define SUGAR_BREAK_IMPL(label_name)                     \
+    if (_sugar_loop_state = 2; false)                    \
+    label_name:                                          \
+        break;                                           \
+    else                                                 \
+        for (int _sugar_i = 0; _sugar_i < 2; ++_sugar_i) \
+            if (_sugar_i != 0)                           \
+                goto label_name;                         \
+            else                                         \
+                SUGAR_BREAK_LABEL_RECIEVER
+
+#define SUGAR_BREAK_LABEL_RECIEVER(label)                                                  \
     do {                                                                                   \
         sugar::_internal::_for::break_state = sugar::_internal::_for::BreakState::breaked; \
         goto label;                                                                        \
