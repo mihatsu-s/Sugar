@@ -3,6 +3,11 @@
 
 #include <sugar/macro/for.hpp>
 
+#ifdef __GNUC__
+#pragma GCC diagnostic ignored "-Wdangling-else"
+#pragma GCC diagnostic ignored "-Wunused-value"
+#endif
+
 #include <vector>
 #define BEGIN_TRACE() std::vector<int> _footprints
 #define TRACE(...) _footprints.push_back(__VA_ARGS__)

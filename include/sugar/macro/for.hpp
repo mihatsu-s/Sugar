@@ -18,9 +18,11 @@ inline BreakState get_and_reset_break_state() noexcept {
 
 }  // namespace sugar::_internal::_for
 
-#define for(...) \
-    SUGAR_FOR_IMPL(SUGAR_CONCAT(_sugar_for_, __COUNTER__), sugar::_internal::_for, __VA_ARGS__)
-#define SUGAR_FOR_IMPL(label_name, ns, ...)                                         \
+#define for(...) SUGAR_ALT_SELECTOR(SUGAR_FOR_IMPL, __VA_ARGS__)
+#define SUGAR_FOR_IMPL_ALT(...) for (__VA_ARGS__)
+#define SUGAR_FOR_IMPL(...) \
+    SUGAR_FOR_IMPL2(SUGAR_CONCAT(_sugar_for_, __COUNTER__), sugar::_internal::_for, __VA_ARGS__)
+#define SUGAR_FOR_IMPL2(label_name, ns, ...)                                        \
     label_name:                                                                     \
     if (ns::break_state == ns::BreakState::breaked)                                 \
         ns::break_state = ns::BreakState::none;                                     \
@@ -37,15 +39,15 @@ inline int _sugar_loop_state = -1;
 constexpr inline int SUGAR_BREAK_LABEL_RECIEVER = 0;
 
 #define break SUGAR_BREAK_IMPL(SUGAR_CONCAT(_sugar_break_, __COUNTER__))
-#define SUGAR_BREAK_IMPL(label_name)                     \
-    if (_sugar_loop_state = 2; false)                    \
-    label_name:                                          \
-        break;                                           \
-    else                                                 \
-        for (int _sugar_i = 0; _sugar_i < 2; ++_sugar_i) \
-            if (_sugar_i != 0)                           \
-                goto label_name;                         \
-            else                                         \
+#define SUGAR_BREAK_IMPL(label_name)                                \
+    if (_sugar_loop_state = 2; false)                               \
+    label_name:                                                     \
+        break;                                                      \
+    else                                                            \
+        for (SUGAR_ALT, int _sugar_i = 0; _sugar_i < 2; ++_sugar_i) \
+            if (_sugar_i != 0)                                      \
+                goto label_name;                                    \
+            else                                                    \
                 SUGAR_BREAK_LABEL_RECIEVER
 
 #define SUGAR_BREAK_LABEL_RECIEVER(label)                                                  \
