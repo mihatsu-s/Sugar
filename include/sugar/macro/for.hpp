@@ -2,7 +2,7 @@
 
 #include "../internal/macro.hpp"
 
-namespace sugar::_internal::_for {
+namespace sugar::_internal::for_impl {
 
 enum class BreakState {
     none,
@@ -16,12 +16,12 @@ inline BreakState get_and_reset_break_state() noexcept {
     return res;
 }
 
-}  // namespace sugar::_internal::_for
+}  // namespace sugar::_internal::for_impl
 
 #define for(...) SUGAR_ALT_SELECTOR(SUGAR_FOR_IMPL, __VA_ARGS__)
 #define SUGAR_FOR_IMPL_ALT(...) for (__VA_ARGS__)
 #define SUGAR_FOR_IMPL(...) \
-    SUGAR_FOR_IMPL2(SUGAR_CONCAT(_sugar_for_, __COUNTER__), sugar::_internal::_for, __VA_ARGS__)
+    SUGAR_FOR_IMPL2(SUGAR_CONCAT(_sugar_for_, __COUNTER__), sugar::_internal::for_impl, __VA_ARGS__)
 #define SUGAR_FOR_IMPL2(label_name, ns, ...)                                        \
     label_name:                                                                     \
     if (ns::break_state == ns::BreakState::breaked)                                 \
@@ -50,8 +50,8 @@ constexpr inline int SUGAR_BREAK_LABEL_RECIEVER = 0;
             else                                                    \
                 SUGAR_BREAK_LABEL_RECIEVER
 
-#define SUGAR_BREAK_LABEL_RECIEVER(label)                                                  \
-    do {                                                                                   \
-        sugar::_internal::_for::break_state = sugar::_internal::_for::BreakState::breaked; \
-        goto label;                                                                        \
+#define SUGAR_BREAK_LABEL_RECIEVER(label)                                                          \
+    do {                                                                                           \
+        sugar::_internal::for_impl::break_state = sugar::_internal::for_impl::BreakState::breaked; \
+        goto label;                                                                                \
     } while (false)
