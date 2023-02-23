@@ -21,27 +21,45 @@ std::set<int> collatz(int n) {
 TEST_SUITE("all macro") {
     TEST_CASE("provides .begin() and .end() of the container") {
         std::vector<int> v{3, 1, 4, 1, 5, 9, 2};
-        std::sort(all(v));
-        CHECK_EQ(v, std::vector<int>({1, 1, 2, 3, 4, 5, 9}));
+
+        auto v1 = v;
+        std::sort(all(v1));
+
+        auto v2 = v;
+        std::sort(v2.begin(), v2.end());
+
+        CHECK_EQ(v1, v2);
     }
 
     TEST_CASE("works properly for rvalue") {
-        CHECK_EQ(
-            std::vector<int>(all(collatz(6))),
-            std::vector<int>({1, 2, 3, 4, 5, 6, 8, 10, 16}));
+        std::vector<int> v1(all(collatz(6)));
+
+        auto temp = collatz(6);
+        std::vector<int> v2(temp.begin(), temp.end());
+
+        CHECK_EQ(v1, v2);
     }
 }
 
 TEST_SUITE("rall macro") {
     TEST_CASE("provides .rbegin() and .rend() of the container") {
         std::vector<int> v{3, 1, 4, 1, 5, 9, 2};
-        std::sort(rall(v));
-        CHECK_EQ(v, std::vector<int>({9, 5, 4, 3, 2, 1, 1}));
+
+        auto v1 = v;
+        std::sort(rall(v1));
+
+        auto v2 = v;
+        std::sort(v2.rbegin(), v2.rend());
+
+        CHECK_EQ(v1, v2);
     }
 
     TEST_CASE("works properly for rvalue") {
-        CHECK_EQ(
-            std::vector<int>(rall(collatz(6))),
-            std::vector<int>({16, 10, 8, 6, 5, 4, 3, 2, 1}));
+        std::vector<int> v1(rall(collatz(6)));
+
+        auto temp = collatz(6);
+        std::vector<int> v2(temp.rbegin(), temp.rend());
+
+        CHECK_EQ(v1, v2);
     }
 }
