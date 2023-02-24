@@ -69,17 +69,17 @@ inline int all_impl<T, id>::counter = 0;
 template <typename T, int id>
 inline std::unique_ptr<T> all_impl<T, id>::ptr;
 
-#define all(...) SUGAR_ALL((__VA_ARGS__), begin, end)
-#define rall(...) SUGAR_ALL((__VA_ARGS__), rbegin, rend)
-#define SUGAR_ALL(val, begin_name, end_name)    \
-    SUGAR_ALL_IMPL(                             \
-        val,                                    \
-        begin_name,                             \
-        end_name,                               \
-        sugar::_internal::all_impl,             \
-        std::remove_reference_t<decltype(val)>, \
+#define SUGAR_ALL(...) SUGAR_ALL_IMPL((__VA_ARGS__), begin, end)
+#define SUGAR_RALL(...) SUGAR_ALL_IMPL((__VA_ARGS__), rbegin, rend)
+#define SUGAR_ALL_IMPL(val, begin_name, end_name) \
+    SUGAR_ALL_IMPL2(                              \
+        val,                                      \
+        begin_name,                               \
+        end_name,                                 \
+        sugar::_internal::all_impl,               \
+        std::remove_reference_t<decltype(val)>,   \
         __COUNTER__)
-#define SUGAR_ALL_IMPL(val, begin_name, end_name, impl, T, id) \
+#define SUGAR_ALL_IMPL2(val, begin_name, end_name, impl, T, id) \
     SUGAR_ALL_EXPR(begin_name, val, impl, T, id), SUGAR_ALL_EXPR(end_name, val, impl, T, id)
 #define SUGAR_ALL_EXPR(name, val, impl, T, id)                                                            \
     (std::is_reference_v<decltype((val))> ? std::name(val)                                                \

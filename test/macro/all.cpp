@@ -18,12 +18,12 @@ std::set<int> collatz(int n) {
     return s;
 }
 
-TEST_SUITE("all macro") {
+TEST_SUITE("SUGAR_ALL macro") {
     TEST_CASE("provides .begin() and .end() of the container") {
         std::vector<int> v{3, 1, 4, 1, 5, 9, 2};
 
         auto v1 = v;
-        std::sort(all(v1));
+        std::sort(SUGAR_ALL(v1));
 
         auto v2 = v;
         std::sort(v2.begin(), v2.end());
@@ -32,7 +32,7 @@ TEST_SUITE("all macro") {
     }
 
     TEST_CASE("works properly for rvalue") {
-        std::vector<int> v1(all(collatz(6)));
+        std::vector<int> v1(SUGAR_ALL(collatz(6)));
 
         auto temp = collatz(6);
         std::vector<int> v2(temp.begin(), temp.end());
@@ -41,12 +41,12 @@ TEST_SUITE("all macro") {
     }
 }
 
-TEST_SUITE("rall macro") {
+TEST_SUITE("SUGAR_RALL macro") {
     TEST_CASE("provides .rbegin() and .rend() of the container") {
         std::vector<int> v{3, 1, 4, 1, 5, 9, 2};
 
         auto v1 = v;
-        std::sort(rall(v1));
+        std::sort(SUGAR_RALL(v1));
 
         auto v2 = v;
         std::sort(v2.rbegin(), v2.rend());
@@ -55,7 +55,7 @@ TEST_SUITE("rall macro") {
     }
 
     TEST_CASE("works properly for rvalue") {
-        std::vector<int> v1(rall(collatz(6)));
+        std::vector<int> v1(SUGAR_RALL(collatz(6)));
 
         auto temp = collatz(6);
         std::vector<int> v2(temp.rbegin(), temp.rend());
